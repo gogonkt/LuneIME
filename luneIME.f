@@ -1,4 +1,6 @@
-\--luneIME.f--
-\--Lune IME main source--
+/--luneIME.f--
+/--Lune IME main source--
 
-\--libs--
+/--libs--
+
+/ vim: ft=forth:

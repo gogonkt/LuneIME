@@ -5,3 +5,5 @@
 : parser ( s1 -- word ) 
     /--do something
     ;
+
+/ vim: ft=forth:
