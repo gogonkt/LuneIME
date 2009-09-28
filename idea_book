@@ -10,3 +10,35 @@ Sun Sep 27 21:53:53 HKT 2009
 13:00 < gogonkt> 然後，: parser ( string1 -- font ) $table-name calls ;
 13:00 < gogonkt> 這樣，stack 里就有了 ." 就 完 成 了" 這幾個字
 2009年 09月 28日 星期一 13:02:43 HKT
+15:38 < gogonkt> howto dynamic calls a word? for example, string ." table-foo", call word table-foo 
+15:39 < gogonkt> I want call word table-foo, dynamic
+15:46 < I440r> im not sure im following you
+15:46 < I440r> you want to call a word whose name is expressed between the quotes?
+15:47 < I440r> ans has evaluate. horrible word
+15:47 < I440r>  ," blah" evaluate
+15:47 < gogonkt> yes
+15:47 < I440r> in the above instance the word blah is executed
+15:47 < I440r> : foo " blah" evaluate ; or something
+15:47 < I440r> which i say is MORONIC
+15:47 < I440r> : foo blah ;
+15:47 < I440r> dun
+15:48 < I440r> if you knew the name of the word you wanted to execute at compile time you should have compiled its XT
+15:48 < I440r> not a string with its name
+15:48 < I440r> if you dont know the name of the word until RUN time thats different
+15:49 < gogonkt> I wanted execute at runtime
+15:49 < I440r> ok it will be executed at run time
+15:49 < I440r> what you want to do is searchj for the word name at run time (something taht should be done at compile time if 
+               you can)
+15:49 < I440r> then execute its xt
+15:50 < I440r> if you know the NAME of a word AT compile time. COMPILE ITS XT lol
+15:50 < I440r> dont compile a string with its name in it and then evaluate taht string
+15:50 < I440r> thats sillyness
+15:50 < I440r> but if you want to execute a word whose name you dont know at compile time.... thats different
+15:50 < gogonkt> word-name in 'stack' and want execute word named 'word-name'
+15:51 < I440r> for instance you might have a game where the user can input different strings.  the things the user is inputting 
+               is a WORD name
+15:51 < I440r> " north [enter]"
+17:16 < ASau> gogonkt: where possible use ['] ' EXECUTE instead of EVALUATE
+17:17 < gogonkt> what is diference between?
+17:18 < ASau> EVALUATE uses dictionary search, while EXECUTE executes already resolved word.
+2009年 09月 28日 星期一 17:27:35 HKT
