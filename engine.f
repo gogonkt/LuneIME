@@ -13,8 +13,9 @@ require ./fuzzy-table.f
 /--parser: 由編碼查出字或詞組----
 : parser ( s1 -- word ) 
     /--call $table-$encodestring parse string to font
-	/-- FIX ME: 怎麼 call encodestring 對應的 word
+	/--chs: 調用碼表程序解碼，給出對應的字
+	/-- FIXME: 怎麼 call encodestring 對應的 word
 	table-pns
     ;
 
-/-- vim: ft=forth: --
+/-- vim: ft=forth:
