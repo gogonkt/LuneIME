@@ -5,3 +5,8 @@
 21:47 < caleb-> gogonkt: gcin 和 scim 用的 IMdkit 基本一模一样
 21:34 < gogonkt> 先力氣放在ime engine上
 Sun Sep 27 21:53:53 HKT 2009
+12:57 < gogonkt> 把table.cin 轉成 forth programe 就完成了
+12:58 < gogonkt> :table-abc ." 就 完 成 了" ;
+13:00 < gogonkt> 然後，: parser ( string1 -- font ) $table-name calls ;
+13:00 < gogonkt> 這樣，stack 里就有了 ." 就 完 成 了" 這幾個字
+2009年 09月 28日 星期一 13:02:43 HKT
