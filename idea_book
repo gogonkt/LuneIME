@@ -47,3 +47,23 @@ Sun Sep 27 21:53:53 HKT 2009
 21:05 <@sleeve> 错
 21:05 <@sleeve> 只有一个
 21:05 <@sleeve> lf
+20:37 < gogonkt> 查找對應的 編碼<=>字/詞
+20:41 < gogonkt> 對了，文件是一行行，讀進來也是一行行的哦
+20:48 < gogonkt> foxes: 我想直接從plan text 讀進來操作
+20:49 < gogonkt> 碼表處理就簡單更多
+2009年 10月 02日 星期五 21:44:57 HKT
+" pns 你 ix 我 pal 他 iwn 這 qe 里" pad place
+pad count type
+2009年 10月 02日 星期五 23:00:55 HKT
+ok> pad count " ix" search
+ok> drop type
+ix 我 pal 他 iwn 這 qe 里
+2009年 10月 02日 星期五 23:25:18 HKT
+01:15 < gogonkt> i want cut first word out
+01:15 < tathi> take a look at skip and scan if your Forth has them
+01:15 < gogonkt> skip, scan ok
+01:16 < ASau> gogonkt: 2dup bl scan nip /string
+01:19 < ASau> gogonkt: scan, skip and /string are your friends.
+2009年 10月 03日 星期六 01:29:27 HKT
+" 你 ix 我 pal 他 iwn 這 qe 里" 2dup bl /char .s cr nip - .s cr type
+2009年 10月 03日 星期六 02:13:21 HKT
