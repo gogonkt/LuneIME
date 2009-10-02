@@ -42,3 +42,8 @@ Sun Sep 27 21:53:53 HKT 2009
 17:17 < gogonkt> what is diference between?
 17:18 < ASau> EVALUATE uses dictionary search, while EXECUTE executes already resolved word.
 2009年 09月 28日 星期一 17:27:35 HKT
+2009年 10月 02日 星期五 21:06:44 HKT
+21:05 < gogonkt> linux 的換行符是 crlf 麼?
+21:05 <@sleeve> 错
+21:05 <@sleeve> 只有一个
+21:05 <@sleeve> lf
