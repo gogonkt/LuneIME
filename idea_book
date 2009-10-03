@@ -67,3 +67,28 @@ ix 我 pal 他 iwn 這 qe 里
 2009年 10月 03日 星期六 01:29:27 HKT
 " 你 ix 我 pal 他 iwn 這 qe 里" 2dup bl /char .s cr nip - .s cr type
 2009年 10月 03日 星期六 02:13:21 HKT
+Sat Oct  3 21:15:48 HKT 2009
+: (testkey) ( -- )
+repeat
+ekey dup emit 'Q <> 
+ while ;
+Sat Oct  3 21:17:02 HKT 2009
+23:11 < gogonkt> recursion and loops which is better in forth?
+23:12 < tathi> It depends. :)
+23:14 < tathi> I tend to use loops more than recursion.
+23:14 < gogonkt> mh
+23:15 < I440r> unless your doing something moronic like an ackerman function itterative methods are generally faster and WAY 
+               simpler than recursive methods
+23:16 < gogonkt> : cleave ." separates" ;
+23:16 < gogonkt> : cleave ." joins " prior cleave ;
+23:18 < I440r> : fib 0 1 rot 1+1 do tuck + loop nip ;
+23:18 < I440r> forgot to give it a name
+23:18 < tathi> Heh.
+23:18 < tathi> And here I was trying to figure out if it actually did return 0.
+23:19 < I440r> lol
+23:19 < I440r> if you write that in the more traditional recusive way it will recurse on itself one hundred and fourteen 
+               MILLION times to calculate the 40th fib
+23:27 < tathi> A direct translation to recursion looks like this:
+23:27 < tathi> : (fib)  >r  tuck +  r> 1- dup if recurse then ;
+23:27 < tathi> : fib 0 1 rot (fib) drop nip ;
+Sun Oct  4 01:35:20 HKT 2009
