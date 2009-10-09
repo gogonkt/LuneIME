@@ -1,3 +1,5 @@
+| vim: ft=reva :
+
 21:46 < caleb-> gogonkt: 在写自己的 ime?
 21:46 < letoh> .cin 一般就是 table 吧... 當然，可以用 hash table 來改進查詢的速度
 21:47 < caleb-> gogonkt: 可以先看看 gtk 自带的简单 immodule

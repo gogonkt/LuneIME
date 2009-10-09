@@ -17,5 +17,12 @@
 | " pns 你 ix 我 pal 他 iwn 這 qe 里" " ix" searchcode 1stword type
 
 : code-parser searchcode 1stword ;
-code-table " pal" code-parser type
-bye
+: test code-table " pal" code-parser type ;
+
+: getnext bl split 3drop bl split drop ; | 還要加入是否成功
+: tstr pad count ;
+: find$ ( a1 n1 a2 n2 -- a3 n3 | " no string!" ) search if getnext 2swap 2drop else " no string!" then ; | locate  <index word> in tstr
+| Sun 04 Oct 2009 10:50:26 PM HKT 
+| ppad
+| tstr " pal" find$ type
+| bye
