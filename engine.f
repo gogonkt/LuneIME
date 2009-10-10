@@ -23,7 +23,7 @@ loadtable
 	if
 		getnext 2swap 2drop
 	else
-		" no string!"
+		" ?" 
 	then
 	;
 
@@ -33,7 +33,7 @@ loadtable
     | -- call: $encodestring parse string to font
 	| -- chs: 調用碼表程序解碼，給出對應的字
 	| -- FIXME: 怎麼 call encodestring 對應的 word
-	table-pns
+	find$
     ;
 
 | -- vim: ft=reva
