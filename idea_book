@@ -94,3 +94,72 @@ Sat Oct  3 21:17:02 HKT 2009
 23:27 < tathi> : (fib)  >r  tuck +  r> 1- dup if recurse then ;
 23:27 < tathi> : fib 0 1 rot (fib) drop nip ;
 Sun Oct  4 01:35:20 HKT 2009
+00:24 < letoh> gogonkt: 各家的 ffi 糖衣不同，我也還沒去追 reva 怎麼做的  不過給你個 hint
+00:24 < letoh> gogonkt: 從 lib/ui 去追追看  可以看到有趣的東西:p
+00:25 < gogonkt> 看了libs 里的東西，都不知道那參數哪來的
+00:25 < letoh> 參數? 不都從 stack 來的嗎:p
+00:26 < gogonkt> 看過了，更雲里霧里了....
+00:26 < letoh> lib/ui/gtk2 看過了嗎? 
+00:26 < gogonkt> 如 data: gtk_major_version as GTK_MAJOR
+00:27 < gogonkt> gtk_major_version, GTK_MAJOR, 從哪來?
+00:27 < letoh> great! reva 連 opengl binding 都準備好了
+00:27 < gogonkt> 2 func: gtk_init 這 2 是什麼東東?
+00:28 < gogonkt> 0 constant GTK_WINDOW_TOPLEVEL
+00:28 < gogonkt> 還這個.....  ~@_@~
+00:28 < letoh> 這不就是 ffi 用法嗎
+00:28 < letoh> constant 是很基本的 forth 語法阿...
+00:29 < gogonkt> 還一堆的東西從哪里找，如果自已做ffi 寫這個文件的話
+00:30 < gogonkt> 不理解 GTK_WINDOW_TOPLEVEL 這個哪里來的
+00:30 < letoh> 應該照著抄就行吧
+00:30 < letoh> 這些都是 gtk 裡定義的常數  你可以看過就算  不用理它
+00:30 < letoh> 重點在那個 func:
+00:31 < gogonkt> 他不會亂寫出來的名字吧
+00:32 < letoh> 不是阿  你要先知道 exported interface.. 然後透過 ffi word 來和 forth 橋接起來
+00:32 < gogonkt>  exported interface ?
+00:33 < letoh> 就是你要用的 IMkit 提供了哪些函式可以用
+00:33 < gogonkt> 這個從哪里找?  exported interface
+00:34 < gogonkt> 源碼里有麼?
+00:35 < letoh> 嗯  有  或用 dump tool 去找
+00:35 < letoh> 不過你不用全部列出來  先把你需要的函式界面找出來就好
+00:35 < gogonkt>  % l lib 
+00:35 < gogonkt> FrameMgr.c  i18nAttr.c  i18nIc.c       i18nMethod.c  i18nUtil.c  IMConn.c    IMValues.c  Xi18nX.h   Xtrans.h
+00:35 < gogonkt> FrameMgr.h  i18nClbk.c  i18nIMProto.c  i18nPtHdr.c   i18nX.c     IMMethod.c  Makefile    XimFunc.h
+00:35 < gogonkt> 哪個是?
+00:36 < gogonkt> % l include 
+00:36 < gogonkt> IMdkit.h  Xi18n.h  XimProto.h
+00:36 < gogonkt> exported interface 長什麼樣子的
+00:36 < letoh> 我沒看過 IMkit  不過我猜應該 IMdkit.h 會有一些資訊
+00:37 < letoh> gogonkt: 例如 libc 提供了 exit
+00:37 < gogonkt> http://groups.google.com/group/comp.lang.forth/browse_thread/thread/57e282bef6845ff0?hl=en#
+00:38 < gogonkt> 大概我的問題都寫了
+00:38 < letoh> 你想在 forth 裡叫用 libc 的 exit 函式，你得先知道它的界面
+00:38 < gogonkt> 嗯 
+00:38 < letoh> 它的 c 宣告是  void exit(int)
+00:39 < letoh> 然後用 ffi word 轉成 forth 認得的資訊，轉成一個真正的 word，這樣你就可以使用了
+00:40 < gogonkt> 要寫C 的代碼麼?
+00:41 < letoh> 不用
+00:41 < gogonkt> http://www.swig.org/tutorial.html
+00:41 < letoh> 你都在 forth 了還寫 c 代碼做啥
+00:41 < gogonkt> 這里講要寫 abc.i
+00:41 < letoh> 不過如果是像 factor 那種惡搞法  看起來的確就是 c 代碼:p
+00:42 < letoh> gogonkt: 你看錯地方了... 不需要去看 swig
+00:42 < gogonkt> @_@
+00:42 < gogonkt> 我還看了 CFFI ...
+00:43 < letoh> 不用...
+00:43 < gogonkt> c 宣告是  void exit(int) <-- 怎樣找這個?
+00:43 < letoh> 你專心看懂 reva 的 ffi word 怎麼用就好
+00:43 < letoh> man 3 exit
+00:44 < gogonkt> gtk2 的呢?
+00:44 < letoh> 或是去 stdlib.h 裡找
+00:44 < letoh> gtk2 當然就是 gtk.h 阿
+00:45 < letoh> gogonkt: 我建議你先找個簡單的 .so 玩玩  不要一開始就找 gtk2
+00:45 < letoh> 感覺你並不是很清楚 forth ffi 在做什麼事...
+00:45 < gogonkt> 如我有了IMdkit 的碼包，怎麼知道找什麼是 exported interface  ?
+00:46 < gogonkt> Bingo !!!
+00:46 < gogonkt> ^O^ 哇哈哈!
+00:47 < letoh> 一般來說  找一下 .h 裡的宣告，只要開頭不是 static 的都是
+00:47 < gogonkt> 是調用外部的funtion 吧 - -b....
+00:47 < letoh> 不怎麼精確的答案
+00:47 < gogonkt> 精確的答案是...
+00:48 < letoh> 我上面都講過了@_@   不過當然也只是我對 forth ffi 的認知啦  也許也不太精確就是XD
+2009年 10月 14日 星期三 01:40:02 HKT
