@@ -163,3 +163,38 @@ Sun Oct  4 01:35:20 HKT 2009
 00:47 < gogonkt> 精確的答案是...
 00:48 < letoh> 我上面都講過了@_@   不過當然也只是我對 forth ffi 的認知啦  也許也不太精確就是XD
 2009年 10月 14日 星期三 01:40:02 HKT
+方向 engin -> xim 部分 -> GUI 部分 -> 出來一個 prototype -> 再完善engine and GUI
+
+Wed Oct 14 21:01:19 HKT 2009
+18:23 < crc> variable: creates a variable with an initial value
+18:23 < crc> e.g.,
+18:23 < crc> 10 variable: foo
+18:23 < crc> foo will contain 10 right off the bat
+
+Wed Oct 14 21:03:03 HKT 2009
+00:48 < freeflyi1g> gogonkt: 你的输入法看的怎么样了
+00:49 < gogonkt> 還是用 IMdkit 好了
+00:49 < Zephyr> gogonkt，你在做输入法？词库，和哈希算法是最关键的
+00:50 < freeflyi1g> gogonkt: 去完善imbus好了
+00:50 < gogonkt> imbus 文檔都沒有 0_0
+00:52 < freeflyi1g> gogonkt: 你还是没搞清 IM/IME的关系
+00:52 < gogonkt> IM/IME?  有什麼不同
+00:54 < freeflyi1g> gogonkt: sunpinyin只是个IME, 
+00:54 < freeflyi1g> IM一般是个framework
+00:54 < freeflyi1g> 比如scim/ibus/uim
+00:55 < freeflyi1g> gogonkt: 比如你想写个IME, 你可以将google pinyin 移植到scim或者ibus下
+00:55 < gogonkt> fcitx 是 IME 吧?
+00:55 < freeflyi1g> gogonkt: fcitx时用XIM的，不仅仅时个engine
+00:56 < gogonkt> IM engine ?
+00:57 < freeflyi1g> gogonkt: 小日本的uim也很有前途，架构很清晰易懂
+00:58 < freeflyi1g> gogonkt: 不过imbus的理念更好些
+00:58 < gogonkt> imbus 的文檔哪有?
+00:59 < freeflyi1g> gogonkt: svn co回来用doxygen自己生成
+01:00 < freeflyi1g> 人家makefile写好了，你直接make就可以
+01:01 < freeflyi1g> gogonkt: IME的难度在于你的算法够不够好
+01:01 < freeflyi1g> gogonkt: 比如 sunpinyin用的slm的
+01:03 < freeflyi1g> gogonkt: http://blogs.sun.com/yongsun/entry/sunpinyin_code_tour_6
+01:03 < BadGirl> SunPinyin Code Tour (6) - 素心如何天上月 (Yong Sun's Blog)
+
+
+2009年 10月 20日 星期二 04:55:31 HKT
