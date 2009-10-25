@@ -1,0 +1,117 @@
+\ Forth Dimensions:*FD XVII/4:Hashing.code
+\ -------------- LISTING 1 ----------------------
+
+anew --hash--
+
+( Generic Hashing Code
+  Each record must start with one cell for use by the
+  hashing code.  It must be followed by a counted string
+  which is the key.  Variable-length data may optionally
+  follow. )
+
+: ALLOTERASE  ( n -- )	\ utility word
+	HERE SWAP DUP ALLOT ERASE ;
+
+1024 CONSTANT /HASHTABLE
+CREATE HASHTABLE
+	/HASHTABLE CELLS ALLOT
+
+: INIT-HASHING  ( -- )
+	HASHTABLE /HASHTABLE CELLS ERASE ;
+
+: MY-HASH-FUNCTION  ( key-addr -- table-index )
+	\ you should override this function
+	COUNT 0 SWAP 0 DO			\ addr cur-index
+		SWAP COUNT I LSHIFT ROT +
+	LOOP NIP
+	/HASHTABLE 1- AND ;		\ assumes power of 2
+
+: KEY>INDEX  ( key-addr -- table-index )
+	MY-HASH-FUNCTION
+	0 MAX /HASHTABLE 1- MIN ;	\ for safety during development
+
+: INSERT-LINK  ( recAddr tableAddr -- )
+	\ insert at top of linked list for this index
+	DUP @ ROT DUP >R !		\ recAddr.link <= previous top
+	R> SWAP ! ;				\ top <= recAddr
+
+: INSERT-RECORD  ( recAddr -- )
+	DUP CELL+ KEY>INDEX CELLS HASHTABLE + INSERT-LINK ;
+
+: DELETE-LINK  ( recAddr tableAddr -- )
+	\ remove link from list
+	SWAP >R
+	BEGIN
+		DUP @ R@ <> SWAP @ 0 <> AND
+	WHILE
+		@	\ no match, so go to next link
+	REPEAT
+	DUP @ 0 <> IF
+		R> @ SWAP !			\ prev.link <= rec.link
+	ELSE
+		R> DROP			\ do nothing if not found
+	THEN ;
+
+: DELETE-RECORD  ( recAddr -- )
+	DUP CELL+ KEY>INDEX CELLS HASHTABLE + DELETE-LINK ;
+
+: FIND-LINK  ( addr tableAddr -- recAddr or 0 )
+	>R BEGIN
+		@ DUP
+	WHILE
+		DUP 1 CELLS + COUNT
+		R@ COUNT COMPARE 0= IF
+			R> EXIT		\ found match, so exit
+		THEN
+		@				\ no match, so go to next link
+	REPEAT ;
+
+: FIND-RECORD  ( addr -- recAddr or 0 )
+	DUP KEY>INDEX CELLS HASHTABLE + FIND-LINK ;
+
+\ ---- analysis words ----
+
+: FILL-TABLE ( -- )
+	INIT-HASHING
+	S" FILEDATA1" R/O OPEN-FILE IF ABORT THEN
+	>R	\ stash the file-id
+	BEGIN
+		HERE 32 CELL+ ALLOTERASE	\ space for text and link
+		DUP CELL+ 1+ 31 R@ READ-LINE
+		0= OVER 0 <> AND
+	WHILE
+		DROP					\ recAddr bytesRead
+		DUP IF
+			OVER CELL+ C!
+			INSERT-RECORD
+		ELSE
+			2DROP
+		THEN
+	REPEAT 2DROP DROP
+ 	R> CLOSE-FILE DROP ;
+ 
+ 
+10 CONSTANT MAX-DEPTH
+CREATE DEPTHS MAX-DEPTH CELLS ALLOT
+VARIABLE TOTAL-ENTRIES
+VARIABLE TOTAL-LISTS
+
+: COUNT-LINKS  ( tableAddr -- n )
+	0 SWAP BEGIN @ DUP WHILE SWAP 1+ SWAP REPEAT DROP ;
+
+: ANALYZE-HASH  ( -- )
+	MAX-DEPTH 0 DO I CELLS DEPTHS + OFF LOOP
+	TOTAL-ENTRIES OFF
+	TOTAL-LISTS OFF
+	/HASHTABLE 0 DO
+		I CELLS HASHTABLE + COUNT-LINKS
+		DUP TOTAL-ENTRIES +!
+		DUP 0> IF 1 TOTAL-LISTS +! THEN
+		MAX-DEPTH 1- MIN
+		1 SWAP CELLS DEPTHS + +!
+	LOOP
+	MAX-DEPTH 0 DO
+		CR I 3 .R 2 SPACES I CELLS DEPTHS + @ 5 .R
+	LOOP CR ." AVE = "
+	TOTAL-ENTRIES @ 100 TOTAL-LISTS @ */
+	S>D <# # # [CHAR] . HOLD #S #> TYPE ;

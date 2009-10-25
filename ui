@@ -1,0 +1,43 @@
+needs revagui/window
+needs revagui/button
+needs revagui/box
+needs callbacks
+
+with~ ~revagui
+
+
+0 value w
+0 value bui
+0 value b
+
+
+: mycallback callback ( object dataptr -- )
+	0 cb-param
+	dup get_userdata		| widget data
+	0if 
+		dup 1 set_userdata
+		bui z" Don't do that!" setlabel 
+		| move the window a bit ...
+		parent dup getpos 50 + swap 50 + swap  setpos
+	else
+		." ARRGH!!!" cr bye
+	then
+	;
+
+: init ( -- w )
+	400 500 110 55 z" " window_xy
+		dup window_begin
+		FL_DOWN_BOX 5 5 100 20 z" Lune輸入法" box to bui
+		5 30 80 20 z" 變!" button
+			['] mycallback 0 setcallback
+		dup window_end
+	;
+
+: __test__ ( w -- )
+	window_show run
+	;
+
+init __test__
+
+( vim: ft=reva :
+)

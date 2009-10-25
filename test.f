@@ -3,22 +3,19 @@
  嘸啥味 編碼碼表
  This file should auto generate by cin2table )
 
-( 表結構:
-	: $table-$encodestring ." font1 font2 font3 ..." ;
-for example:
-	: fuzzy-nihao ." 你好 泥號" ; )
-
 ( Note: 把 cin 碼表讀入 hash table 供 engine 使用 )
 needs string/misc
 needs string/trim
-include common.f
+needs util/eachline
+| needs common.f
 ~strings
 
 256 value filesize
+32 constant bl
 create tablename 128 allot
-( " minitab.cin" tablename place
-)
-" noseeing.cin" tablename place
+" minitab.cin" tablename place
+
+| " noseeing.cin" tablename place
 
 ( htable: table file handle )
 0 value htable
@@ -58,11 +55,13 @@ tablename opentable/rw
 	close
 btable loadtable
 
+( 
 btable filesize splitline
 2dup .>typecr
+)
 
 ( remove Comments )
-split# 
+( split# 
 2nip
 2dup .>typecr
 splitbl
@@ -72,6 +71,8 @@ splitbl
 2dup pad +place
 .>typecr
 pad count .>typecr
+)
+btable count ['] .>typecr eachline
 
 .s
 

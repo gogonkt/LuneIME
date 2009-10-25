@@ -198,3 +198,21 @@ Wed Oct 14 21:03:03 HKT 2009
 
 
 2009年 10月 20日 星期二 04:55:31 HKT
+04:51 < crcx> in retro:   macro: .self last @ d->name literal, ` type ;
+04:43 < I440r> : .self create last @ , does> ..... ; 
+04:43 < I440r> .self blah
+04:43 < I440r> .self foo
+04:44 < I440r> what comes after the "does>" part would be easy in isforth
+04:47 < I440r> : .id  ( nfa --- )  count mask and type ;
+04:47 < I440r> the mask is needed and its value depends on how many bits of a nfa's count byte are for the name length
+04:47 < gogonkt> mask ?
+04:47 < I440r> and how many are for lex bits
+04:47 < gogonkt> no mask here :(
+04:48 < I440r> im making it up
+04:48 < I440r> you need to define the value of mask
+04:48 < I440r> SOME bits in the NFA's count byte will be used as flags
+04:48 < I440r> usually to flag a word as being immediate or not
+04:48 < I440r> whatever bits your particular forth uses you have to mask out
+04:48 < I440r> in isforth mask would be $3f
+
+Sun Oct 25 05:14:52 HKT 2009
