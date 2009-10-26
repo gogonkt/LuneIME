@@ -1,26 +1,29 @@
 alias: # |
 : parsess type ." : " parsews space type cr ;
+: eatword parsews 2dup ;
 : (typeit) 2dup type cr ;
 : %ename " %ename" parsess ;
 : %prompt " %prompt" parsess ;
 : %selkey " %selkey" parsess ;
 : %space_style " %space_style " parsess ;
-: %keyname " %keyname" ;
-: keyname ;
-: %chardef " %chardef" ;
-: chardef ;
-: begin (typeit) ." : " '% parse ;
-: end (typeit) ;
+: %keyname eatword " %keyname" (typeit) ." : " '% parse ;
+: keyname (typeit) eatword ;
+: %chardef eatword " %chardef" (typeit) ." : " '% parse ;
+: chardef (typeit) eatword ;
 
-: chardef ( a n -- )
+: sample1 ( a n -- )
 	parsews
 	2dup " begin" cmp 0if type cr then
 	2dup " end" cmp 0if type cr then ;
 
+(
 chardef begin
 chardef end
+)
 : __test__ " 1st" parsess ;
-| __test__ I_am_a_test
+(
+__test__ I_am_a_test
+)
 include noseeing.cin
 
 ( vim: ft=reva :
