@@ -216,3 +216,165 @@ Wed Oct 14 21:03:03 HKT 2009
 04:48 < I440r> in isforth mask would be $3f
 
 Sun Oct 25 05:14:52 HKT 2009
+22:42 < gogonkt> caleb-: 在?
+22:43 < caleb-> 在
+22:43 < gogonkt> IM 怎麼取得用戶type 了什麼?
+22:44 < gogonkt> IMdkit 提供的麼?
+22:45 < caleb-> 由 server 去抓，IMdkit 不管
+22:45 < caleb-> gogonkt: 可參考一些 hotkey 程序
+22:45 < gogonkt> 是不是和GUI無關的?
+22:45 < caleb-> 可以無關
+22:46 < gogonkt> oh, 那我可以分出來一塊了
+22:46 < caleb-> 所以會有搶 hotkey 的情形 :P
+22:46 < caleb-> kernel, X, WM, hotkey server, IM server, clients
+22:47 < gogonkt> 有什麼hotkey 的程序?
+22:47 < caleb-> 所有環節都可能有人搶 key
+22:47 < gogonkt> 0_0
+22:47 < caleb-> xbindkeys
+22:47 < gogonkt> ok
+22:48 < gogonkt> xev 也可?
+22:49 < caleb-> 很多做法均可
+22:49 < caleb-> 絕大部份 WM 都有實作 hotkey detect
+22:49 < caleb-> 也有 kernel level 的 hotkey detect (但會限制 kernel 種類)
+22:50 < b4283> quake 3 會把所有key+滑鼠全部搶走 XD
+22:50 < caleb-> gogonkt: 處理完不要的 key 記得要 pass 給其它程序用
+22:51 < b4283> 當機只能用 ssh 連進來砍…而且還不一定能復原
+22:51 < gogonkt> 哦
+22:51 < caleb-> gogonkt: 比如收到 enter, 但剛好發現 IME 此時用不到 enter, 就要 pass 給其它程序
+22:51 < caleb-> b4283: 應該可以用 Sys Rq 抓回來
+22:51 < gogonkt> 先看看xbindkeys, 再看看 fcitx
+22:51 < b4283> Alt-sysrq ?
+22:52 < b4283> 沒試過說.. 也許可以
+22:52 < caleb-> gogonkt: 直接看 fcitx 好了
+22:52 < gogonkt> o...也是
+22:52 < caleb-> gogonkt: fcitx 是 XIM only 適合當簡易 demo
+22:53 < gogonkt> 分了塊，到時再寫其他的好了
+22:54 < caleb-> 先求有再求好
+22:54 < caleb-> 反正 forth 到時還是要重構
+22:54 < gogonkt> o,,,,記得有一個xenv loop 是不是就是這一塊?
+22:56 < caleb-> XIM 是 server - client, 但 GTK / Qt immodule 是 GUI toolkit plugin, 可以不寫成 server - client
+22:57 < gogonkt> 聽不明白...
+22:57 < letoh> immodule 只處理 protocol.. server/client 的部份由 gtk 處理掉?
+22:57 < caleb-> gogonkt: 可以想成 GTK module，例如有 GTK png module 則 GTK 程序可顯示 png
+22:58 < gogonkt> 其實你說的這一堆，在一個輸入法裡起什麼作用 ?
+22:58 < caleb-> immodule 只是一個 GTK module, 把它當成 GTK 常備功能就對了
+22:59 < caleb-> gogonkt: scim 把 immodule 和 XIM 分開，所以在執行 GTK / Qt 程序前不用先 init IM server
+23:00 < gogonkt> 我看 UIM，又說沒用到 XIM，XIM究竟是什麼作用 ?
+23:00 < caleb-> ~$ gqview & -> load libgtk -> load gtk immodule -> 所以 gqview 裡可用 gtk immodule
+23:00 < caleb-> 不用先啟動 IM server
+23:01 < caleb-> 但如果用 XIM 就 *一定* 要在 XIM client 啟動前先啟動 XIM server
+23:01 < letoh> caleb-: 乾脆出一本《第一次寫 IM 就上手》
+23:01 < gogonkt> 對啊
+23:01 < caleb-> ~$ gqview & -> load libgtk -> load XIM immodule wrapper -> gqview 要找 XIM server, 若找不到就沒輸入法
+23:02  * caleb- 一知半解
+23:02 < gogonkt> 網上一個這樣的文也冇 :(
+23:02 < caleb-> gogonkt: scim 這種好處是，關閉所有 gtk 程序後，scim 也跟著消失
+23:03 < letoh> 一般都是找個現成的程式來追吧
+23:03 < letoh> 大概瞭解架構後，追起來就會輕鬆一點
+23:03 < caleb-> gcin 是不管怎樣都用 server - client 架構
+23:04 < caleb-> gcin 支援兩種 protocol, XIM 和 gcin protocol
+23:04 < gogonkt> 哦
+23:04 < caleb-> GTK / Qt 透過 gcin protocol 可以召喚 gcin server, 不需要事先啟動 server
+23:05 < caleb-> XIM protocol 一定要先啟動 server 才能用
+23:05 < caleb-> gcin protocol 透過 /tmp/gcin-$USER/socket-* 聯絡，可以不需要先啟動 server
+23:06 < gogonkt> 那不是程序啟動時一起啟動的麼?
+23:06 < caleb-> gqview & -> load libgtk -> load gcin immodule -> 尋找 gcin server -> 若找不到就召喚一隻 gcin -> 用 gcin 
+                protocol 連上
+23:07 < caleb-> gqview & -> load libgtk -> load gcin immodule -> 尋找 gcin server -> 找到一隻 gcin -> 用 gcin protocol 連上
+23:07  * gogonkt 召喚《第一次寫 IM 就上手》
+23:07 < caleb-> 先寫 XIM only 吧
+23:07 < caleb-> fcitx forth 版
+23:08 < caleb-> 所以如果把  /tmp/gcin-$USER/socket-* 幹掉，gcin protocol 就死了
+23:09 < gogonkt> 有看到 /tmp/gcin-$USER
+23:10 < gogonkt> 我是現在還不太明瞭一個最最基本的IM 要處理哪些東西
+23:12 < gogonkt> GUI 是可有可無?
+23:12 < caleb-> XIM server (兼 hotkey grabber) -> 抓到 key -> 切換 輸入模式/非輸入模式 -> 繼續抓 key -> 送字
+23:12 < caleb-> 會盲打就不用 gui
+23:12 < caleb-> 很多 gcin user 根本不顯示候選字
+23:12 < gogonkt> 哦，原來XIM server (兼 hotkey grabber)
+23:12 < caleb-> 從頭到尾看不到候選字視窗
+23:13 < caleb-> gcin 可以在任何模式下按 Alt-Shift-key 送特殊符號或字串
+23:13 < caleb-> 所以 非輸入模式 下也要考慮可以送字
+23:14 < gogonkt> XIM client 做什麼的?
+23:14 < caleb-> gogonkt: 比如 xterm 就是一個 XIM client
+23:14 < caleb-> 透過 XIM 使用輸入法的程序都是 XIM client
+23:15 < gogonkt> xterm 不是輸入法來的啊???
+23:15 < caleb-> gogonkt: GTK / Qt 程序可以身為 XIM client 也可以不用 XIM, 那就變成不是 XIM client
+23:16 < caleb-> XIM 是 server - client 啊
+23:16 < caleb-> fcitx 是 XIM server, 用 fcitx 打字的程序就是 XIM client
+23:16 < gogonkt> 哦，大悟!
+23:17 < caleb-> gogonkt: 當 XIM server crash 時，當前使用中的 active XIM client 會一起 crash
+23:17 < caleb-> 這是 XIM 設計上的問題，無法避免
+23:17 < gogonkt> 程序也會關掉?
+23:17 < caleb-> gogonkt: 你可以試試 xterm & -> 用 fcitx 打字 -> 在 xterm pkill -9 fcitx -> 看見 xterm 一起死
+23:18 < gogonkt> 還真沒這樣搞過
+23:18 < caleb-> 可能會殘留 gui 屍體在畫面上，但 XIM client 是死定了
+23:19 < gogonkt> 這時 xterm 還能用麼?
+23:19 < caleb-> 不能用了
+23:19 < gogonkt> 明了
+23:19 < caleb-> 用 GTK / Qt immodule 就沒這問題
+23:19 < caleb-> 因為只是一個 GTK / Qt module crash 而已
+23:20 < caleb-> 只有該 module 的功能失效
+23:20 < gogonkt> 怎樣*nix 不定一個公共的出來....
+23:20 < caleb-> 而且 GTK / Qt 可以 reload immodule 造成「好像沒當掉」的假像
+23:20 < gogonkt> 搞這麼多個方法... 真是的
+23:21 < caleb-> immodule crash 時 gnome-terminal 還是可以繼續用
+23:21 < caleb-> 而且再按兩次輸入法切換鍵，immodule 又會復活
+23:21 < caleb-> 其實只是 reload immodule
+23:21 < gogonkt> 原來這樣的
+23:22 < gogonkt> 把這個匯原文吧
+23:22 < gogonkt> 成文
+23:23 < caleb-> gogonkt: 等你寫好，你的 code 就可以當文件了
+23:23 < gogonkt> UIM 不用 XIM 那又是什麼原理?
+23:23 < gogonkt> 哦，那是的
+23:24 < caleb-> 一樣是類似 gcin protocol 的東西
+23:24 < gogonkt> forth code 看起來很清爽
+23:24 < caleb-> gogonkt: 話說也可以用 openvanilla 當你的 輸入法engine
+23:25 < caleb-> gogonkt: 有 scim-openvanilla
+23:25 < caleb-> gogonkt: ucimf 也是用 openvanilla module 
+23:25 < gogonkt> 就是說，我要寫的就是  XIM server (兼 hotkey grabber) -> 抓到 key -> 切換 輸入模式/非輸入模式 -> 繼續抓 key -> 
+                 送字 ?
+23:26 < caleb-> 對
+23:26 < gogonkt> 什麼叫 用 openvanilla 當你的 輸入法engine
+23:26 < caleb-> 單純的 XIM server 其實架構很簡單
+23:26 < caleb-> 困難的部份 IMdkit 都寫好了
+23:27 < caleb-> 眾多的 bug 也在這數十年間被前輩們修完了
+23:27 < caleb-> 眾多的 IMdkit bugs 也在這數十年間被前輩們修完了
+23:27 < caleb-> 眾多的 IMdkit bugs 也在這十數年間被前輩們修完了
+23:27  * caleb- XIM 好像還不到 20 年
+23:29 < gogonkt> 那個誰，把寫XIM 的IM 說得多容易，10多分鍾就寫好了，也不放出來看看 :(
+23:30  * caleb- 之前有用 gcin 改一個「內碼輸入法」XIM server
+23:30 < caleb-> 簡單到爆，只能用內碼輸入法
+23:30 < gogonkt> <<輸入法教shi>>
+23:33 < caleb-> 差不多只剩 gcin.cpp / eve.cpp / intcode* 這樣
+23:33 < gogonkt> 能再做個看看麼.....
+23:33  * caleb- 懶…
+23:34 < caleb-> gcin 基本 code 很簡單的
+23:34 < gogonkt> engine  留空就好了
+23:34 < caleb-> 難的是 tsin 算法
+23:34 < caleb-> gui 部份絕對比 fcitx 好懂
+23:35 < gogonkt> gcin 的 main.c 也看不明...
+23:36 < gogonkt> 唉
+23:36 < caleb-> gogonkt: 先看 #define USE_XIM 的就好
+23:36 < caleb-> gogonkt: 透過 IC.h 和 IMdkit 溝通
+23:37 < caleb-> #USE_XIM 的部份基本可以全部照抄，不過我不知要如合轉成 forth
+3:37 < caleb-> s/合/何/   
+23:34 < caleb-> gcin 基本 code 很簡單的
+23:34 < gogonkt> engine  留空就好了
+23:34 < caleb-> 難的是 tsin 算法
+23:34 < caleb-> gui 部份絕對比 fcitx 好懂
+23:35 < gogonkt> gcin 的 main.c 也看不明...
+23:36 < gogonkt> 唉
+23:36 < caleb-> gogonkt: 先看 #define USE_XIM 的就好
+23:36 < caleb-> gogonkt: 透過 IC.h 和 IMdkit 溝通
+23:37 < caleb-> #USE_XIM 的部份基本可以全部照抄，不過我不知要如合轉成 forth
+
+
+
+Mon Oct 26 23:48:33 HKT 2009
+00:48 < gogonkt> 好吧，想把 #if dbg....#endif 間的內容去掉，有什麼辦法?
+00:50 < 黑格尔> state machine lol
+00:50 <@FKtPp> sed -i~ -e '/^#if dbg/,/^endif/d' xxxxx.c
+
+
+2009年 10月 27日 星期二 00:52:20 HKT
