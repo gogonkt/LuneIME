@@ -1,0 +1,42 @@
+| vim: ft=reva :
+| IMdkit wrapper library
+
+" libXimd.so" lib glib
+
+cfunc: IMOpenIM ( XIMS IMOpenIM(Display display,...)
+cfunc: IMSetIMValues ( char *IMSetIMValues(XIMS ims,...)
+cfunc: IMGetIMValues ( char *IMGetIMValues(XIMS ims,...)
+1 vfunc: IMCloseIM ( void IMCloseIM(XIMS ims)
+2 func: IMPreeditStart ( int IMPreeditStart(XIMS ims, XPointer im_protocol)
+2 func: IMPreeditEnd ( int IMPreeditEnd(XIMS ims, XPointer im_protocol)
+2 vfunc: IMForwardEvent ( void IMForwardEvent(XIMS ims, XPointer im_protocol)
+2 vfunc: IMCommitString ( void IMCommitString(XIMS ims, XPointer im_protocol)
+2 func: IMCallCallback ( int IMCallCallback(XIMS ims, XPointer im_protocol)
+
+( /* IM Attributes Name */ )
+z" modifiers"		constant IMModifiers
+z" serverWindow"	constant IMServerWindow
+z" serverName"		constant IMServerName
+z" serverTransport" constant IMServerTransport
+z" locale"			constant IMLocale
+z" inputStyles"		constant IMInputStyles
+z" protocolHandler" constant IMProtocolHandler
+z" onKeysList"		constant IMOnKeysList
+z" offKeysList"		constant IMOffKeysList
+z" encodingList"	constant IMEncodingList
+z" filterEventMask" constant IMFilterEventMask
+z" protocolDepend"	constant IMProtocolDepend
+
+hex
+0001 constant I18N_IMSERVER_WIN ( /* IMServerWindow */ )
+0002 constant I18N_IM_NAME		( /* IMServerName */ )
+0004 constant I18N_IM_LOCALE	( /* IMLocale */ )
+0008 constant I18N_IM_ADDRESS	( /* IMServerTransport */ )
+0010 constant I18N_INPUT_STYLES ( /* IMInputStyles */ )
+0020 constant I18N_ON_KEYS		( /* IMOnKeysList */ )
+0040 constant I18N_OFF_KEYS		( /* IMOffKeysList */ )
+0080 constant I18N_IM_HANDLER	( /* IMProtocolHander */ )
+0100 constant I18N_ENCODINGS	( /* IMEncodingList */ )
+0200 constant I18N_FILTERMASK	( /* IMFilterEventMask */ )
+0400 constant I18N_PROTO_DEPEND ( /* IMProtoDepend */ )
+decimal

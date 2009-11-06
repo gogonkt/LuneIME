@@ -1,0 +1,26 @@
+( xim handle XIM stuff )
+include lib/ximd
+
+creat lc_ctype
+" LC_CTYPE" getenv lc_ctype place
+
+: lune_ProtoHandler ;
+: setopenxim
+	dpy
+	| IMServerWindow		xim_arr[0].xim_xwin
+	IMModifiers			z" Xi18n"
+	IMServerName		z" Lune"
+	IMLocale			lc_ctype zt
+	IMServerTransport	z" X/"
+	IMInputStyles		&im_styles
+	IMEncodingList		&encodings
+	IMProtocolHandler	lune_ProtoHandler
+	IMFilterEventMask	KeyPressMask
+	IMOnKeysList		&triggerKeys
+	NULL
+	;
+: openxim setopenxim IMOpenIM ;
+: test openxim ;
+
+
+| -- vim: ft=reva
