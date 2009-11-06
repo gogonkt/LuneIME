@@ -1,7 +1,7 @@
 | vim: ft=reva :
 | IMdkit wrapper library
 
-" libXimd.so" lib glib
+" libXimd.so" lib ximd
 
 cfunc: IMOpenIM ( XIMS IMOpenIM(Display display,...)
 cfunc: IMSetIMValues ( char *IMSetIMValues(XIMS ims,...)
